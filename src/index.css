@@ -254,7 +254,7 @@ input:focus-visible {
 /********** VENUE CARD **********/
 .venueDetails-card{
   width:40rem;
-  max-height: 40rem;
+  min-height: 40rem;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   display: flex;
   flex-direction: column;
@@ -263,9 +263,11 @@ input:focus-visible {
 }
 
 .map-img-container{
-  height: 200px; 
+  height: 200px;
   overflow: hidden;
   border-radius: .25rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .map-img-container img{
@@ -317,9 +319,56 @@ input:focus-visible {
   border-radius: 5px;
   border: 0;
   font-weight: 600;
-  margin-right: 1rem;
 }
 
 .btn-db:hover {
   background-color: rgb(60, 60, 60);
 }
+
+/* LOADER */
+
+.loading{
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: block;
+  margin:15px auto;
+  position: relative;
+  box-sizing: border-box;
+  animation: zeroRotation 1s linear infinite alternate;
+}
+.loader::after,
+.loader::before {
+  content: '';  
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgb(85, 85, 85);
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, 50%);
+  border-radius: 50%;
+}
+.loader::before {
+  left: auto;
+  right: 0;
+  transform: translate(50%, 100%);
+}
+
+@keyframes zeroRotation {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    transform: scale(0) rotate(360deg);
+  }
+} 
+    

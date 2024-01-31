@@ -8,7 +8,7 @@ const mBoxToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN; //for static map ima
 
 export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
   const venueCategories = ["Bar", 'Club', 'Restaurant'];
-  const venueFeatures = ["Alcohol", "Food", "Cover Fee", "Coat Check", "Dress Code", "Music", "Parking", "WiFi", "Outdoor Seating", "Dance Floor", "Happy Hour"];
+  const venueFeatures = ["Alcohol", "Food", "Cover Fee", "Coat Check", "Dress Code", "Music", "Parking", "WiFi", "Outdoor Seating", "Dance Floor", "Happy Hour", "Reservations", "Bottle Service"];
   const [venueDescription, setVenueDescription] = useState(''); //allow user to update venue description
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedFeatures, setSelectedFeatures] = useState([]);        
@@ -47,9 +47,15 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
   function getVenueHours(venue) {
     const today = new Date().getDay();
     if (venue.hours && venue.hours[today]) {
-      const open = venue.hours[today].open.startsWith("0") ? venue.hours[today].open.slice(1)[0] + ':' + venue.hours[today].open.slice(2) : venue.hours[today].open;
-      const close = Number(venue.hours[today].close.slice(0,2)) > 12 ? (Number(venue.hours[today].close.slice(0,2)) - 12).toString() + ':' + venue.hours[today].close.slice(2,4) : venue.hours[today].close;
-      return open === "0:00" && close === "11:59" ? "24h" : `${open} AM - ${close} PM`;
+      const formatTime = (time) => {
+        const formattedTime = ('0' + time).slice(-4);
+        const hours = formattedTime.slice(0, 2);
+        const minutes = formattedTime.slice(2);
+        return `${hours}:${minutes}`;
+      };
+      const open = formatTime(venue.hours[today].open);
+      const close = formatTime(venue.hours[today].close);
+      return open === "00:00" && close === "11:59" ? "24h" : `${open} - ${close}`;
     } else {
       return "N/A";
     }
@@ -92,16 +98,16 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
           <p className="secondaryTxt" >{venue.address}</p>
           <p className="secondaryTxt">{venue.phone}</p>
-          <div >
-            {/* <p className="secondaryTxt">{venue.hoursDisplay}</p> */}
-            <p className="secondaryTxt">{getVenueHours(venue)}</p>
-          </div>
+          {venue.website && (
+            <a className='secondaryTxt' style={{ color: 'blue', padding:0, margin:0 }} href={venue.website} target="_blank" rel="noopener noreferrer">
+              {venue.website.replace(/^https?:\/\//, '').split('/')[0]}
+            </a> )}
         </div>
 
-        {venue.website && (
-        <a className='secondaryTxt' style={{ color: 'blue', padding:0, margin:0 }} href={venue.website} target="_blank" rel="noopener noreferrer">
-          {venue.website.replace(/^https?:\/\//, '')}
-        </a> )}
+        <div style={{paddingTop:'.5rem'}}>
+            <p className="secondaryTxt"> Today: {getVenueHours(venue)}</p>
+          </div>
+
         
         <div style={{ borderBottom: '.5px solid gray', paddingTop: '1rem' }}></div>
         {/* VENUE DESCRIPTION BOX*/}
@@ -143,7 +149,6 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
         <div style={{ display: 'flex', justifyContent: 'flex-end', padding:'0rem'}}>
           <button className='btn-db' onClick={() => {
             addVenueToDb(venue.venueId, venue)
-            console.log(venue);
             }}>Add</button>
         </div>
       </div>
@@ -176,7 +181,7 @@ VenueDetailsCard.propTypes = {
     }),
     hours_popular: PropTypes.array,
     popularity: PropTypes.number,
-    price: PropTypes.string,
+    price: PropTypes.number,
     ratings: PropTypes.arrayOf(PropTypes.number),
     website: PropTypes.string,
     tel: PropTypes.string,

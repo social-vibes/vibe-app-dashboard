@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { VscSearch,  } from "react-icons/vsc";
 import VenueDetailsCard from '../components/VenueDetailsCard';
-import CustomEntryCard from '../components/CustomEntryCard';
+// import CustomEntryCard from '../components/CustomEntryCard';
 import { useNavigate } from 'react-router-dom';
 const fsBaseUrl = import.meta.env.VITE_FS_BASE_URL;
 const fsKey = import.meta.env.VITE_FS_API_KEY;
@@ -19,9 +19,8 @@ export default function Dashboard(){
 
   function handleSubmit() {
     setSearched(true);
-    setLoading(true);
     fetchFourSq(placesUrl, 'places')
-    setLoading(false);
+    // setLoading(false);
   }
 
 
@@ -61,6 +60,10 @@ export default function Dashboard(){
 
 //-- Fetch FourSquare
   function fetchFourSq(url, reqType){
+    if(reqType == 'places'){
+      setVenues([])
+      setLoading(true);
+    }
     fetch(url, options)
     .then(response => {
       if (!response.ok) {
@@ -69,6 +72,7 @@ export default function Dashboard(){
       return response.json();
     }).then(response => {
       reqType === 'places' ? setVenues(response.results) : setVenueDetails(response);
+      setLoading(false);
     })
     .catch(e => console.error(e));
   }
@@ -83,30 +87,30 @@ const buildPlacesLi = (places) => {
       </li>
     )
   }
-  if (places.length === 0) {
     return (
-      <li className="no-results">
-        <p>No results found</p>
-      </li>
-    );
-  } else {
-      return (
-        <>
-          {loading && (
-            <li className="loading">
-              <p>Searching...</p>
+      <>
+        {loading && (
+          <li className="loading">
+            <span className="loader"></span>
+          </li>
+        )}
+        {
+          !loading && places.length === 0 
+          ?
+            <li className="no-results">
+              <p>No results found</p>
             </li>
-          )}
-          {places.map((venue) => (
+          :
+          places.map((venue) => (
             <li key={venue.fsq_id} className={`place-li ${selectedVenue === venue ? 'clicked' : ''}`} onClick={() => getDetails(venue)}>
               <p className='place-name'>{venue.name}</p>
               <p className='place-address'>{venue.location['formatted_address']}</p>
             </li>
           ))}
-        </>
-      );
-    }
-  };
+      </>
+    );
+  }
+
 
 
   //fetch details api --> render details card
@@ -148,10 +152,9 @@ const buildPlacesLi = (places) => {
 
       {/* CONTENT AREA */}
       <div className="venueDetails-container">
-        {venueDetails ? 
+      {venueDetails && 
         <VenueDetailsCard selectedVenue={selectedVenue} venueDetails={venueDetails}/> 
-        : 
-        <CustomEntryCard />}
+      }
       </div>
 
     </div>
