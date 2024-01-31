@@ -20,6 +20,11 @@ html, body {
   box-sizing: border-box;
 }
 
+*:focus {
+  outline: none;
+}
+
+
 /******************************** LOGIN PAGE ********************************/
 /* login page container */
 .login-container {
@@ -40,6 +45,10 @@ input {
   color: #242424;
   width: 300px;
   box-sizing: border-box;
+}
+input:focus,
+input:focus-visible {
+  box-shadow: 0 0 0 1px #242424 inset;
 }
 
 .logo {
@@ -70,12 +79,8 @@ input {
 }
 
 .login:hover {
-  background-color: #eb187e;
-}
-
-.login:focus,
-.login:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  /* background-color: #eb187e; */
+  background-color: rgb(60, 60, 60)
 }
 
 /******************************** END LOGIN PAGE ********************************/
@@ -133,7 +138,7 @@ input {
   border: 0;
 }
 .searchBar-Btn:hover {
-  background-color: rgb(54, 54, 54)
+  background-color: rgb(60, 60, 60);
 }
 
 
@@ -149,7 +154,7 @@ input {
 }
 
 .signOut-btn:hover{
-  background-color: rgb(54, 54, 54)
+  background-color: rgb(60, 60, 60);
 }
 
 
@@ -316,5 +321,5 @@ input {
 }
 
 .btn-db:hover {
-  background-color: rgb(54, 54, 54)
+  background-color: rgb(60, 60, 60);
 }

@@ -11,6 +11,7 @@ const fsKey = import.meta.env.VITE_FS_API_KEY;
 export default function Dashboard(){
   const [textInput, setTextInput] = useState(''); //user input
   const [searched, setSearched] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [venues, setVenues] = useState([]); //Venues returned from places search api
   const [selectedVenue, setSelectedVenue] = useState(null);
   const [venueDetails, setVenueDetails] = useState(null);
@@ -18,7 +19,9 @@ export default function Dashboard(){
 
   function handleSubmit() {
     setSearched(true);
+    setLoading(true);
     fetchFourSq(placesUrl, 'places')
+    setLoading(false);
   }
 
 
@@ -87,12 +90,21 @@ const buildPlacesLi = (places) => {
       </li>
     );
   } else {
-      return places.map((venue) => (
-        <li key={venue.fsq_id} className={`place-li ${selectedVenue === venue ? 'clicked' : ''}`} onClick={() => getDetails(venue)}>
-          <p className='place-name'>{venue.name}</p>
-          <p className='place-address'>{venue.location['formatted_address']}</p>
-        </li>
-      ));
+      return (
+        <>
+          {loading && (
+            <li className="loading">
+              <p>Searching...</p>
+            </li>
+          )}
+          {places.map((venue) => (
+            <li key={venue.fsq_id} className={`place-li ${selectedVenue === venue ? 'clicked' : ''}`} onClick={() => getDetails(venue)}>
+              <p className='place-name'>{venue.name}</p>
+              <p className='place-address'>{venue.location['formatted_address']}</p>
+            </li>
+          ))}
+        </>
+      );
     }
   };
 
@@ -112,6 +124,7 @@ const buildPlacesLi = (places) => {
           <input className='searchBar'type="text" placeholder="Search" 
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
+            onKeyUp={(e) => e.key === 'Enter' ? handleSubmit() : null}
           />
           <button className='searchBar-Btn' onClick={() => handleSubmit()}>
             <VscSearch fontSize={19}/>

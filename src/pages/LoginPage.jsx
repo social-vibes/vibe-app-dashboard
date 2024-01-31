@@ -21,15 +21,20 @@ export default function Login() {
             setDisplayError('Incorrect password')
           });
       } else {
-        setDisplayError('You are not authorized to access this page.');
+        setDisplayError('You are not authorized to access this site.');
       }
     }
 
   return (
     <div className="login-container">
       <img className="logo" src={logo} alt="Vibe App. logo"/>
-      <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+      <input className="lgn" type="email" placeholder="Email" 
+        onChange={(e) => setEmail(e.target.value)} 
+      />
+      <input className="lgn" type="password" placeholder="Password" 
+      onChange={(e) => setPassword(e.target.value)} 
+      onKeyUp={(e) => e.key === 'Enter' ? handleSignIn() : null}
+      />
       <button className= "login" onClick={handleSignIn}>Sign In</button>
       <div className="error-container" style={{ height: '30px' }}>
         <p className="errorMsg">{displayError}</p>

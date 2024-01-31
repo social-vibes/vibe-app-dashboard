@@ -32,19 +32,19 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
     hours: venueDetails.hours.regular, //DETAILS
     hoursDisplay: venueDetails.hours.display || '',
     popularity: venueDetails.popularity || '', //DETAILS
-    price: venueDetails.price || null,  //DETAILS
+    price: venueDetails.price || '',  //DETAILS
     category: selectedCategory,
     features: selectedFeatures, 
-    dailyCheckIns:[], //--> Whenever a user signs in, we add {user:_ , date:_,}, (this lets us to track check-ins/day & popular hours overtime)
+    dailyCheckIns:[{}], //--> Whenever a user signs in, we add {user:_ , date:_,}, (this lets us to track check-ins/day & popular hours overtime)
     ratings: [],  //--> Whenever a user rates a venue, their rating (1-5) is added to the array. Get sum and divide by ratings.length for avg. 
     mapImage: `${mBoxBaseUrl}/dark-v11/static/pin-l+0000ff(${selectedVenue.geocodes.main.longitude},${selectedVenue.geocodes.main.latitude})/${selectedVenue.geocodes.main.longitude},${selectedVenue.geocodes.main.latitude},10,0,34/560x200@2x?access_token=${mBoxToken}`,
   };
 
+  console.log("venue:", venue);
 
 
   //-- Get the venue's hours for today
   function getVenueHours(venue) {
-    console.log(selectedVenue);
     const today = new Date().getDay();
     if (venue.hours && venue.hours[today]) {
       const open = venue.hours[today].open.startsWith("0") ? venue.hours[today].open.slice(1)[0] + ':' + venue.hours[today].open.slice(2) : venue.hours[today].open;
@@ -159,9 +159,14 @@ VenueDetailsCard.propTypes = {
     name: PropTypes.string.isRequired,
     categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     geocodes: PropTypes.shape({
-      main: PropTypes.shape({ latitude: PropTypes.number.isRequired,longitude: PropTypes.number.isRequired}).isRequired,
+      main: PropTypes.shape({ 
+        latitude: PropTypes.number.isRequired,
+        longitude: PropTypes.number.isRequired,
+      }).isRequired,
     }).isRequired,
-    location: PropTypes.shape({formatted_address: PropTypes.string.isRequired,}).isRequired,
+    location: PropTypes.shape({
+      formatted_address: PropTypes.string.isRequired,
+    }).isRequired,
   }).isRequired,
   venueDetails: PropTypes.shape({
     description: PropTypes.string,
@@ -172,10 +177,15 @@ VenueDetailsCard.propTypes = {
     hours_popular: PropTypes.array,
     popularity: PropTypes.number,
     price: PropTypes.string,
-    rating: PropTypes.number,
+    ratings: PropTypes.arrayOf(PropTypes.number),
     website: PropTypes.string,
     tel: PropTypes.string,
   }).isRequired,
+  //technically not required as this is info is pushed from the app;
+  dailyCheckIns: PropTypes.arrayOf(PropTypes.shape({
+    user: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+  })),
 };
 
 
