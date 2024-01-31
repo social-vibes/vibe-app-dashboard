@@ -216,7 +216,7 @@ input:focus-visible {
 .place-li.clicked {
   background-color: #f5f5f5; 
   transform: translateY(-2px);
-  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.12);
 }
 
 .place-li.clicked {
