@@ -1,18 +1,108 @@
 import { useState } from 'react';
 import { VscSearch,  } from "react-icons/vsc";
+import VenueDetailsCard from '../components/VenueDetailsCard';
+import CustomEntryCard from '../components/CustomEntryCard';
+import { useNavigate } from 'react-router-dom';
+const fsBaseUrl = import.meta.env.VITE_FS_BASE_URL;
+const fsKey = import.meta.env.VITE_FS_API_KEY;
 
-// ******************* MAPBOX MAPS + FOURSQUARE PLACE SEARCH ********************************************************* 
-// USING A COMBINATION OF MAPBOX (for maps) AND FOURSQUARE (for place + place details);
-// PLACE SEARCH API --> https://location.foursquare.com/developer/reference/place-search
-// DETAILS SEARCH API --> https://location.foursquare.com/developer/reference/place-details
-// DETAILS FIELDS --> https://location.foursquare.com/developer/reference/response-fields 
+
 
 export default function Dashboard(){
   const [textInput, setTextInput] = useState(''); //user input
+  const [searched, setSearched] = useState(false); 
+  const [venues, setVenues] = useState([]); //Venues returned from places search api
+  const [selectedVenue, setSelectedVenue] = useState(null);
+  const [venueDetails, setVenueDetails] = useState(null);
+
 
   function handleSubmit() {
+    setSearched(true);
+    fetchFourSq(placesUrl, 'places')
   }
 
+
+  //-- FourSquare Places Search params    
+  let userLat = 45.4215;
+  let userLng = -75.6993;
+  let sessionToken = generateRandomSessionToken();
+  let limit = 10;
+  let categoryIds = ['10032', '13003', '10032', '13000', '13062', '13065', '13018'] //https://location.foursquare.com/places/docs/categories
+  let placesUrl = `${fsBaseUrl}search?query=${textInput}&ll=${userLat},${userLng}&radius=50000&categories=${categoryIds.join(",")}&limit=${limit}&session_token=${sessionToken}`
+  const navigate = useNavigate();
+
+
+  //-- FourSquare place details request fields
+  let detailFields = ['description', 'tel', 'website', 'social_media', 'hours', 'hours_popular', 'rating', 'stats', 'popularity', 'price', 'photos', 'features'];
+
+
+  //-- Generate session Token for FourSquare API
+  function generateRandomSessionToken(length = 32) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    for (let i = 0; i < length; i++) {
+      result += characters[Math.floor(Math.random() * characters.length)];
+    }
+    return result;
+  }
+
+
+   //-- Request headers for FourSquare API
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: fsKey
+    }
+  };
+
+//-- Fetch FourSquare
+  function fetchFourSq(url, reqType){
+    fetch(url, options)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+      return response.json();
+    }).then(response => {
+      reqType === 'places' ? setVenues(response.results) : setVenueDetails(response);
+    })
+    .catch(e => console.error(e));
+  }
+
+
+// -- Place list item component
+const buildPlacesLi = (places) => {
+  if (!searched) {
+    return (
+      <li className="no-results">
+        <p>Search for a venue</p>
+      </li>
+    )
+  }
+  if (places.length === 0) {
+    return (
+      <li className="no-results">
+        <p>No results found</p>
+      </li>
+    );
+  } else {
+      return places.map((venue) => (
+        <li key={venue.fsq_id} className={`place-li ${selectedVenue === venue ? 'clicked' : ''}`} onClick={() => getDetails(venue)}>
+          <p className='place-name'>{venue.name}</p>
+          <p className='place-address'>{venue.location['formatted_address']}</p>
+        </li>
+      ));
+    }
+  };
+
+
+  //fetch details api --> render details card
+    const getDetails = (venue) => {
+      setSelectedVenue(venue);
+      let placeDetailsUrl = `${fsBaseUrl}${venue.fsq_id}?fields=${detailFields.join(',')}&session_token=${sessionToken}`;
+      fetchFourSq(placeDetailsUrl, 'details');
+    }
 
   return (
     <>
@@ -28,7 +118,7 @@ export default function Dashboard(){
           </button>
         </div>
         <div>
-          <button className='signOut-btn' onClick={() => handleSubmit()}> Sign Out </button>
+          <button className='signOut-btn' onClick={() => navigate(`/`)}> Sign Out </button>
         </div>
       </div>
       
@@ -37,17 +127,18 @@ export default function Dashboard(){
       {/* SIDEBAR */}
       <div className="sidebar-container">
         <div className="sidebar">
-          <ul>
-            <li>Place 1</li>
-            <li>Place 2</li>
+          <ul className="venues-ul">
+            {buildPlacesLi(venues)}
           </ul>
         </div>
       </div>
 
       {/* CONTENT AREA */}
       <div className="venueDetails-container">
-        <div className='venueDetails-card'>
-        </div>
+        {venueDetails ? 
+        <VenueDetailsCard selectedVenue={selectedVenue} venueDetails={venueDetails}/> 
+        : 
+        <CustomEntryCard />}
       </div>
 
     </div>

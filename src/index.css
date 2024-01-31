@@ -57,8 +57,8 @@ input {
 /* login btn */
 .login {
   padding: 1rem;
-  background-color: #ff1987;
-  color: #fff;
+  /* background-color: #ff1987;  */
+  background-color: #242424;
   cursor: pointer;
   border: none;
   border-radius: 5px;
@@ -83,7 +83,7 @@ input {
 
 /******************************** DASHBOARD PAGE ********************************/
 
-/********** DASHBOARD PAGE **********/
+/********** HEADER **********/
 .header {
   /* background-color: #1d1d1d; */
   background-color: #f0f0f0;
@@ -93,6 +93,7 @@ input {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  border-bottom: .5px solid #c8c7c7;
 }
 
 
@@ -147,6 +148,11 @@ input {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
+.signOut-btn:hover{
+  background-color: rgb(54, 54, 54)
+}
+
+
 
 
 /** Main content -- sidebar + details section **/
@@ -160,7 +166,7 @@ input {
 
 
 
-/********** SIDEBAR **********/
+/********** SIDEBAR LIST **********/
 .sidebar-container {
   width: 25%;
   background-color: #f0f0f0;
@@ -170,11 +176,61 @@ input {
 .sidebar {
   padding-top: 0;
   margin-left: 1rem;
-  margin-right: 1rem;
-  border-top: .1rem solid #c8c7c7;
+  margin-right: .25rem;
+  /* border-top: .5px solid #c8c7c7; */
 }
 
 
+.venues-ul{
+  overflow-y: auto;
+  height: 80vh;
+  padding-bottom:1rem;
+  list-style: none;
+  padding: 0;
+}
+.venues-ul::-webkit-scrollbar {
+  width: 4px; 
+}
+.venues-ul::-webkit-scrollbar-thumb {
+  background-color: #b0b0b0; 
+  border-radius: 6px; 
+}
+.venues-ul::-webkit-scrollbar-track {
+  background-color: #f0f0f0; 
+}
+
+.place-li {
+  margin-top: 0.5rem;
+  border-radius: 2px;
+  border: 0;
+  cursor: pointer;
+  width:100%;
+  border-bottom: .5px solid #dcdada;
+}
+.place-li:hover,
+.place-li.clicked {
+  background-color: #f5f5f5; 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.place-li.clicked {
+  background-color: #eaffea; 
+}
+
+.place-name{
+  font-weight: 600;
+  margin: 0;
+  padding: .5rem;
+}
+
+.place-address{
+  margin: 0;
+  padding: .5rem;
+  padding-top: 0;
+  color: gray;
+  font-size: 12px;
+}
 
 
 
@@ -190,10 +246,10 @@ input {
   justify-content: center;
 }
 
-
+/********** VENUE CARD **********/
 .venueDetails-card{
-  min-width:40rem;
-  min-height: 30rem;
+  width:40rem;
+  max-height: 40rem;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   display: flex;
   flex-direction: column;
@@ -201,10 +257,64 @@ input {
   border-radius: .25rem;
 }
 
+.map-img-container{
+  height: 200px; 
+  overflow: hidden;
+  border-radius: .25rem;
+}
 
+.map-img-container img{
+  width: 100%; 
+  height: auto; 
+}
 
+.details_card-main-info{
+  padding-left: 1rem;
+  padding-right:1rem;
+  padding-bottom:1rem;
+}
 
+.secondaryTxt{
+  color: gray;
+  font-size:12px;
+  margin: 0;
+}
 
+.card-title{
+  margin:.75rem;
+  margin-left:0;
+}
 
+.chip {
+  display: inline-block;
+  padding: 0 1rem;
+  margin-right: .5rem;
+  margin-bottom: .5rem;
+  height: 1.5rem;
+  font-size: 12px;
+  border-radius: 5rem;
+  background-color: #fff;
+  color:#242424;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  border:none;
+}
 
+.selected {
+  background-color: #cbf1cb; 
+}
 
+.btn-db{
+  background-color: #242424;
+  height: 2.5rem;
+  width: 5rem;
+  border-radius: 5px;
+  border: 0;
+  font-weight: 500;
+  margin-right: 1rem;
+}
+
+.btn-db:hover {
+  background-color: rgb(54, 54, 54)
+}
