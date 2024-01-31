@@ -1,0 +1,210 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: #242424;
+  background-color: rgba(255, 255, 255);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  height: 100%; 
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/******************************** LOGIN PAGE ********************************/
+/* login page container */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; 
+}
+
+/* input fields */
+input {
+  padding: 13px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: none;
+  background-color: #FAF9F6;
+  color: #242424;
+  width: 300px;
+  box-sizing: border-box;
+}
+
+.logo {
+  padding: 1.5em;
+  width: 15rem;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.errorMsg {
+  color: red;
+  font-size: 12px;
+}
+
+/* login btn */
+.login {
+  padding: 1rem;
+  background-color: #ff1987;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  width: 300px;
+  box-sizing: border-box; 
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.login:hover {
+  background-color: #eb187e;
+}
+
+.login:focus,
+.login:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/******************************** END LOGIN PAGE ********************************/
+
+
+/******************************** DASHBOARD PAGE ********************************/
+
+/********** DASHBOARD PAGE **********/
+.header {
+  /* background-color: #1d1d1d; */
+  background-color: #f0f0f0;
+  height: 6rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.searchBar-container{
+  padding: 1rem;
+  margin:0;
+  width: 25%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #f0f0f0;
+}
+
+.searchBar{
+  width:100%;
+  height: 3rem;
+  border-radius: 5px;
+  margin-bottom: 0;
+  background-color: #fff;
+  border: none;
+  border-bottom-right-radius:0;
+  border-top-right-radius:0;
+  vertical-align: top;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+
+.searchBar-Btn{
+  height: 3rem;
+  width: 3rem;
+  border-radius: 5px;
+  background-color: #242424;
+  border-bottom-left-radius:0;
+  border-top-left-radius:0;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border: 0;
+}
+.searchBar-Btn:hover {
+  background-color: rgb(54, 54, 54)
+}
+
+
+.signOut-btn{
+  background-color: #242424;
+  height: 2.5rem;
+  width: 5rem;
+  border-radius: 5px;
+  border: 0;
+  font-weight: 500;
+  margin-right: 1rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+
+
+/** Main content -- sidebar + details section **/
+.main-content {
+  display: flex;
+  height: calc(100vh - 6rem);
+}
+
+
+
+
+
+
+/********** SIDEBAR **********/
+.sidebar-container {
+  width: 25%;
+  background-color: #f0f0f0;
+  /* height: 100%; */
+}
+
+.sidebar {
+  padding-top: 0;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  border-top: .1rem solid #c8c7c7;
+}
+
+
+
+
+
+
+/********** MAIN CONTENT **********/
+.venueDetails-container {
+  flex: 1;
+  padding: 20px;
+  background-color: #dae0e6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.venueDetails-card{
+  min-width:40rem;
+  min-height: 30rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f4f4;
+  border-radius: .25rem;
+}
+
+
+
+
+
+
+
+
