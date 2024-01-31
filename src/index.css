@@ -148,7 +148,7 @@ input:focus-visible {
   width: 5rem;
   border-radius: 5px;
   border: 0;
-  font-weight: 500;
+  font-weight: 600;
   margin-right: 1rem;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
@@ -316,7 +316,7 @@ input:focus-visible {
   width: 5rem;
   border-radius: 5px;
   border: 0;
-  font-weight: 500;
+  font-weight: 600;
   margin-right: 1rem;
 }
 
