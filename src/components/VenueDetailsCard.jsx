@@ -11,7 +11,8 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
   const venueFeatures = ["Alcohol", "Food", "Cover Fee", "Coat Check", "Dress Code", "Music", "Parking", "WiFi", "Outdoor Seating", "Dance Floor", "Happy Hour", "Reservations", "Bottle Service"];
   const [venueDescription, setVenueDescription] = useState(''); //allow user to update venue description
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedFeatures, setSelectedFeatures] = useState([]);        
+  const [selectedFeatures, setSelectedFeatures] = useState([]);   
+  const [savingVenue, setSavingVenue] = useState(false);     
 
   useEffect(() => {
     setVenueDescription(venueDetails?.description || '');
@@ -40,7 +41,6 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
     mapImage: `${mBoxBaseUrl}/dark-v11/static/pin-l+0000ff(${selectedVenue.geocodes.main.longitude},${selectedVenue.geocodes.main.latitude})/${selectedVenue.geocodes.main.longitude},${selectedVenue.geocodes.main.latitude},10,0,34/560x200@2x?access_token=${mBoxToken}`,
   };
 
-  console.log("venue:", venue);
 
 
   //-- Get the venue's hours for today
@@ -70,13 +70,18 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
   
   //-- SAVE VENUE OBJECT in Firestore "venues" collection
   async function addVenueToDb(id, venue) {
+    setSavingVenue(true)
     try {
     const docRef = await addDoc(collection(db, "venues"), {
         venue
         });
+        setTimeout(() => {
+          setSavingVenue(false);
+        }, 1200);
         console.log("Document written with ID: ", docRef.id);
     } catch (e) {
     console.error("Error adding document: ", e);
+    setSavingVenue(false);
     }
   }
 
@@ -94,7 +99,7 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
             <h2 className='card-title'>{venue.name}</h2>
         </div>
 
-        {/* secondary info (address, hours etc.) */}
+        {/* Secondary info (address, hours etc.) */}
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
           <p className="secondaryTxt" >{venue.address}</p>
           <p className="secondaryTxt">{venue.phone}</p>
@@ -147,9 +152,15 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
 
         {/* ADD TO DB */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', padding:'0rem'}}>
-          <button className='btn-db' onClick={() => {
+          <button className='btn-db' onClick={() => { 
             addVenueToDb(venue.venueId, venue)
-            }}>Add</button>
+            }}>
+            { savingVenue 
+            ? 
+            <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle className="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path className="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+            :
+            'Add' }
+          </button>
         </div>
       </div>
     </div>
@@ -186,7 +197,7 @@ VenueDetailsCard.propTypes = {
     website: PropTypes.string,
     tel: PropTypes.string,
   }).isRequired,
-  //technically not required as this is info is pushed from the app;
+  //technically not required as this is info is pushed from the mobile app;
   dailyCheckIns: PropTypes.arrayOf(PropTypes.shape({
     user: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,

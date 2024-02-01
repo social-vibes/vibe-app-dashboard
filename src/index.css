@@ -53,9 +53,9 @@ input:focus-visible {
 
 .logo {
   padding: 1.5em;
-  width: 15rem;
-  will-change: filter;
-  transition: filter 300ms;
+  width: 20rem;
+  /* will-change: filter;
+  transition: filter 300ms; */
 }
 
 .errorMsg {
@@ -312,27 +312,31 @@ input:focus-visible {
   background-color: #cbf1cb; 
 }
 
-.btn-db{
+
+.btn-db {
   background-color: #242424;
   height: 2.5rem;
   width: 5rem;
   border-radius: 5px;
   border: 0;
   font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn-db:hover {
   background-color: rgb(60, 60, 60);
 }
 
-/* LOADER */
+/* VENUE LIST LOADER ANIMATION */
 
 .loading{
   display: flex;
   justify-content: center;
   padding-top: 2rem;
 }
-
 
 .loader {
   width: 48px;
@@ -372,3 +376,54 @@ input:focus-visible {
   }
 } 
     
+
+
+/* CHECKMARK ANIMATION BTN */
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 3;
+  stroke-miterlimit: 10;
+  stroke: #fff;
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark {
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 3;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  margin: 10% auto;
+  box-shadow: inset 0px 0px 0px #ececec;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes scale {
+  0%, 100% {
+    transform: none;
+  }
+  50% {
+    transform: scale3d(1.1, 1.1, 1);
+  }
+}
+@keyframes fill {
+  100% {
+    box-shadow: inset 0px 0px 0px 30px #242424;
+  }
+}  
