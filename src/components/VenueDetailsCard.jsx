@@ -11,7 +11,8 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
   const venueFeatures = ["Alcohol", "Food", "No Cover", "Coat Check", "Dress Code", "Music", "Parking", "WiFi", "Outdoor Seating", "Dance Floor", "Happy Hour", "Reservations", "Bottle Service"];
   const [venueDescription, setVenueDescription] = useState(''); //allow user to update venue description
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedFeatures, setSelectedFeatures] = useState([]);   
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
+  const [selectedPrice, setSelectedPrice] = useState(3);   
   const [savingVenue, setSavingVenue] = useState(false);     
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
     hours: venueDetails.hours.regular, //DETAILS
     hoursDisplay: venueDetails.hours.display || '',
     popularity: venueDetails.popularity || '', //DETAILS
-    price: venueDetails.price || '',  //DETAILS
+    price: selectedPrice,  //DETAILS
     category: selectedCategories,
     features: selectedFeatures, 
     dailyCheckIns:[{}], //--> Whenever a user signs in, we add {user:_ , date:_,}, (this lets us to track check-ins/day & popular hours overtime)
@@ -67,6 +68,12 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
       setVenueDescription(value);
     }
   };
+
+  //-- price scale 
+  const handleChangeDropdown = (event) => {
+    const selectedValue = parseInt(event.target.value, 10);
+    setSelectedPrice(selectedValue);
+  };
   
   //-- SAVE VENUE OBJECT in Firestore "venues" collection
   async function addVenueToDb(id, venue) {
@@ -84,6 +91,7 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
     setSavingVenue(false);
     }
   }
+
 
 
 
@@ -124,17 +132,31 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
           />
         </div>
 
-        {/* VENUE CATEGORIES */}
-        <h4 style={{ margin: '.5rem', marginLeft:'0' }}>Category</h4>
         <div style={{display:'flex'}}>
-          {venueCategories.map((cat, index) => (
-            <button key={`cat-${index}`} 
-            className={`chip ${selectedCategories.includes(cat) ? 'selected' : ''}`}
-            onClick={() => setSelectedCategories(cats => {
-              return cats.includes(cat) ? cats.filter(item => item !== cat) : [...cats, cat]
-            })}> 
-              {cat} 
-            </button> ))}
+          {/* VENUE CATEGORIES */}
+          <div style={{display:'flex', flexDirection:"column"}}>
+            <h4 style={{ margin: '.5rem', marginLeft:'0' }}>Category</h4>
+            <div style={{display:'flex'}}>
+              {venueCategories.map((cat, index) => (
+                <button key={`cat-${index}`} 
+                className={`chip ${selectedCategories.includes(cat) ? 'selected' : ''}`}
+                onClick={() => setSelectedCategories(cats => {
+                  return cats.includes(cat) ? cats.filter(item => item !== cat) : [...cats, cat]
+                })}> 
+                  {cat} 
+                </button> ))}
+            </div>
+          </div>
+
+          {/* VENUE PRICE SCALE */}
+          <div style={{display:'flex', flexDirection:"column", marginLeft:'1.5rem'}}>
+            <h4 style={{ margin: '.5rem', marginLeft:'.5rem', marginBottom:'.5rem' }}>Price</h4>
+            <select className='select' value={selectedPrice} onChange={handleChangeDropdown}>
+              {[1, 2, 3, 4, 5].map((value) => (
+                <option key={value} value={value}> {value} </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* VENUE FEATURES */}
