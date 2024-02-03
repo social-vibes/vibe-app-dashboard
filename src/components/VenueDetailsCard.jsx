@@ -8,15 +8,15 @@ const mBoxToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN; //for static map ima
 
 export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
   const venueCategories = ["Bar", 'Club', 'Restaurant'];
-  const venueFeatures = ["Alcohol", "Food", "Cover Fee", "Coat Check", "Dress Code", "Music", "Parking", "WiFi", "Outdoor Seating", "Dance Floor", "Happy Hour", "Reservations", "Bottle Service"];
+  const venueFeatures = ["Alcohol", "Food", "No Cover", "Coat Check", "Dress Code", "Music", "Parking", "WiFi", "Outdoor Seating", "Dance Floor", "Happy Hour", "Reservations", "Bottle Service"];
   const [venueDescription, setVenueDescription] = useState(''); //allow user to update venue description
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedFeatures, setSelectedFeatures] = useState([]);   
   const [savingVenue, setSavingVenue] = useState(false);     
 
   useEffect(() => {
     setVenueDescription(venueDetails?.description || '');
-    setSelectedCategory('');
+    setSelectedCategories('');
     setSelectedFeatures([]);
   }, [venueDetails]);
 
@@ -34,7 +34,7 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
     hoursDisplay: venueDetails.hours.display || '',
     popularity: venueDetails.popularity || '', //DETAILS
     price: venueDetails.price || '',  //DETAILS
-    category: selectedCategory,
+    category: selectedCategories,
     features: selectedFeatures, 
     dailyCheckIns:[{}], //--> Whenever a user signs in, we add {user:_ , date:_,}, (this lets us to track check-ins/day & popular hours overtime)
     ratings: [],  //--> Whenever a user rates a venue, their rating (1-5) is added to the array. Get sum and divide by ratings.length for avg. 
@@ -129,8 +129,10 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
         <div style={{display:'flex'}}>
           {venueCategories.map((cat, index) => (
             <button key={`cat-${index}`} 
-            className={`chip ${selectedCategory === cat ? 'selected' : ''}`}
-            onClick={() => setSelectedCategory(cat)}> 
+            className={`chip ${selectedCategories.includes(cat) ? 'selected' : ''}`}
+            onClick={() => setSelectedCategories(cats => {
+              return cats.includes(cat) ? cats.filter(item => item !== cat) : [...cats, cat]
+            })}> 
               {cat} 
             </button> ))}
         </div>
