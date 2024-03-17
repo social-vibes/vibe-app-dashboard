@@ -39,6 +39,7 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
     features: selectedFeatures, 
     checkIns:[], //--> Whenever a user signs in, we add {user:_ , date:_,}, (this lets us to track check-ins/day & popular hours overtime)
     reviews: [],  //--> Whenever a user rates a venue, their rating (1-5) is added to the array. Get sum and divide by ratings.length for avg. 
+    moments:[], //--> moments
     mapImage: `${mBoxBaseUrl}/dark-v11/static/pin-l+0000ff(${selectedVenue.geocodes.main.longitude},${selectedVenue.geocodes.main.latitude})/${selectedVenue.geocodes.main.longitude},${selectedVenue.geocodes.main.latitude},10,0,34/560x200@2x?access_token=${mBoxToken}`,
   };
 
@@ -93,7 +94,7 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
   // }
 
   async function addVenueToDb(venue) {
-    const {venueId, name, address, latitude, longitude, website, phone, description, hours, hoursDisplay, popularity, price, category, features, checkIns, reviews, mapImage} = venue;
+    const {venueId, name, address, latitude, longitude, website, phone, description, hours, hoursDisplay, popularity, price, category, features, checkIns, reviews, mapImage, moments} = venue;
     setSavingVenue(true)
     try {
     const docRef = await setDoc(doc(db, "venuesTest", venueId), {
@@ -114,6 +115,7 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
       checkIns: checkIns,
       reviews: reviews,   
       mapImage: mapImage,
+      moments: moments
       });
       setTimeout(() => {
         setSavingVenue(false);
