@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import { db } from '../../firebase/firebaseConfig'; 
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc, setDoc, doc } from "firebase/firestore"; 
 const mBoxBaseUrl = import.meta.env.VITE_MAPBOX_BASE_URL; //for static map image 
 const mBoxToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN; //for static map image;
 
@@ -26,8 +26,8 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
     venueId: crypto.randomUUID(),
     name: selectedVenue.name, //CORE
     address: selectedVenue.location.formatted_address, //CORE (place search api)
-    lat: selectedVenue.geocodes.main.latitude, //CORE
-    long: selectedVenue.geocodes.main.longitude, //CORE
+    latitude: selectedVenue.geocodes.main.latitude, //CORE
+    longitude: selectedVenue.geocodes.main.longitude, //CORE
     website: venueDetails.website || '',  //DETAILS (place details api)
     phone: venueDetails.tel || '',  //DETAILS
     description: venueDetails.description || venueDescription, //DETAILS
@@ -37,8 +37,8 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
     price: selectedPrice,  //DETAILS
     category: selectedCategories,
     features: selectedFeatures, 
-    dailyCheckIns:[{}], //--> Whenever a user signs in, we add {user:_ , date:_,}, (this lets us to track check-ins/day & popular hours overtime)
-    ratings: [],  //--> Whenever a user rates a venue, their rating (1-5) is added to the array. Get sum and divide by ratings.length for avg. 
+    checkIns:[], //--> Whenever a user signs in, we add {user:_ , date:_,}, (this lets us to track check-ins/day & popular hours overtime)
+    reviews: [],  //--> Whenever a user rates a venue, their rating (1-5) is added to the array. Get sum and divide by ratings.length for avg. 
     mapImage: `${mBoxBaseUrl}/dark-v11/static/pin-l+0000ff(${selectedVenue.geocodes.main.longitude},${selectedVenue.geocodes.main.latitude})/${selectedVenue.geocodes.main.longitude},${selectedVenue.geocodes.main.latitude},10,0,34/560x200@2x?access_token=${mBoxToken}`,
   };
 
@@ -76,16 +76,49 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
   };
   
   //-- SAVE VENUE OBJECT in Firestore "venues" collection
-  async function addVenueToDb(id, venue) {
+  // async function addVenueToDb(id, venue) {
+  //   setSavingVenue(true)
+  //   try {
+  //   const docRef = await addDoc(collection(db, "venues"), {
+  //       venue
+  //       });
+  //       setTimeout(() => {
+  //         setSavingVenue(false);
+  //       }, 1200);
+  //       console.log("Document written with ID: ", docRef.id);
+  //   } catch (e) {
+  //   console.error("Error adding document: ", e);
+  //   setSavingVenue(false);
+  //   }
+  // }
+
+  async function addVenueToDb(venue) {
+    const {venueId, name, address, latitude, longitude, website, phone, description, hours, hoursDisplay, popularity, price, category, features, checkIns, reviews, mapImage} = venue;
     setSavingVenue(true)
     try {
-    const docRef = await addDoc(collection(db, "venues"), {
-        venue
-        });
-        setTimeout(() => {
-          setSavingVenue(false);
-        }, 1200);
-        console.log("Document written with ID: ", docRef.id);
+    const docRef = await setDoc(doc(db, "venuesTest", venueId), {
+      venueId: venueId,
+      name: name, 
+      address: address, 
+      latitude: latitude,
+      longitude: longitude,
+      website: website || 'N/A',  
+      phone: phone || 'N/A',
+      description: venueDescription || description, 
+      hours: hours, 
+      hoursDisplay: hoursDisplay|| '',
+      popularity: popularity || '', //DETAILS
+      price: price,  //DETAILS
+      category: category,
+      features: features, 
+      checkIns: checkIns,
+      reviews: reviews,   
+      mapImage: mapImage,
+      });
+      setTimeout(() => {
+        setSavingVenue(false);
+      }, 1200);
+      console.log("Document written with ID: ", docRef.id);
     } catch (e) {
     console.error("Error adding document: ", e);
     setSavingVenue(false);
@@ -177,7 +210,7 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
         {/* ADD TO DB */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', padding:'0rem'}}>
           <button className='btn-db' onClick={() => { 
-            addVenueToDb(venue.venueId, venue)
+            addVenueToDb(venue)
             }}>
             { savingVenue 
             ? 
