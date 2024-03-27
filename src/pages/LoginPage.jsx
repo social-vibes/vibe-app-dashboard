@@ -2,7 +2,9 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase/firebaseConfig'; 
 import { signInWithEmailAndPassword } from "firebase/auth"; 
-import logo from '../assets/logo.png';
+// import logo from '../assets/logo.png';
+import logoV2 from '../assets/logoV2.png';
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -27,7 +29,7 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <img className="logo" src={logo} alt="Vibe App. logo"/>
+      <img className="logo" src={logoV2} alt="Vibe App. logo"/>
       <input className="lgn" type="email" placeholder="Email" 
         onChange={(e) => setEmail(e.target.value)} 
       />

@@ -31,7 +31,7 @@ export default function VenueDetailsCard({ selectedVenue, venueDetails }) {
     website: venueDetails.website || '',  //DETAILS (place details api)
     phone: venueDetails.tel || '',  //DETAILS
     description: venueDetails.description || venueDescription, //DETAILS
-    hours: venueDetails.hours.regular, //DETAILS
+    hours: venueDetails.hours.regular || "N/A", //DETAILS
     hoursDisplay: venueDetails.hours.display || '',
     popularity: venueDetails.popularity || '', //DETAILS
     price: selectedPrice, //DETAILS
